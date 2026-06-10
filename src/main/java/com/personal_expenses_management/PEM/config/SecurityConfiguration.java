@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -53,11 +54,14 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
 
         return httpSecurity
+                .csrf(cors -> {})
                 .csrf(customizer -> customizer.disable())
                 .httpBasic(Customizer.withDefaults())
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/register", "/login", "/error").permitAll()
+                        .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/error/**").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJWT))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

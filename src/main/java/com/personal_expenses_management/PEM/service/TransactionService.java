@@ -49,11 +49,11 @@ public class TransactionService {
         transaction.setTransactionType(addTransactionDTO.getTransactionType());
 
         if(addTransactionDTO.getTransactionType() == TransactionType.EXPENSE) {
-            account.setBalance(account.getBalance() - addTransactionDTO.getTransactionAmount());
-
             if(account.getBalance() < addTransactionDTO.getTransactionAmount()){
                 throw new RuntimeException("Transaction not possible");
             }
+
+            account.setBalance(account.getBalance() - addTransactionDTO.getTransactionAmount());
         }
         else
             account.setBalance(account.getBalance() + addTransactionDTO.getTransactionAmount());

@@ -46,6 +46,11 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
+        if (request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         token = authHeader.substring(7);
 
         try {
